@@ -6,11 +6,17 @@ import net.minecraft.component.type.ContainerComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.collection.DefaultedList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ShulkerVacuum implements DedicatedServerModInitializer {
+
+    public static final String MOD_ID = "shulkervacuum";
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     @Override
     public void onInitializeServer() {
