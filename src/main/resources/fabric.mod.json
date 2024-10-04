@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "shulkervacuum",
+  "version": "${version}",
+  "name": "Shulker Vacuum",
+  "description": "",
+  "authors": ["Kian Leiner"],
+  "environment": "server",
+  "entrypoints": {
+    "server": [
+      "com.kleinercode.fabric.shulkervacuum.ShulkerVacuum"
+    ]
+  },
+  "mixins": [
+    "shulkervacuum.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
