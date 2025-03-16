@@ -17,10 +17,12 @@ public abstract class PlayerInventoryMixin {
         final PlayerInventory inventory = (PlayerInventory)(Object)this;
         ActionResult result = PlayerPickUpItemCallback.EVENT.invoker().interact(inventory, stack);
 
-        switch (result) {
-            case ActionResult.CONSUME -> info.setReturnValue(true);
-            case ActionResult.FAIL -> info.setReturnValue(false);
+        if (result.equals(ActionResult.CONSUME)) {
+            info.setReturnValue(true);
+        } else if (result.equals(ActionResult.FAIL)) {
+            info.setReturnValue(false);
         }
+
     }
 
 

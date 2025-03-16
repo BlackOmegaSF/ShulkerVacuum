@@ -23,7 +23,7 @@ public interface PlayerPickUpItemCallback {
                 for (PlayerPickUpItemCallback listener : listeners) {
                     ActionResult result = listener.interact(inventory, stack);
 
-                    if (result != ActionResult.PASS) {
+                    if (!(result.equals(ActionResult.PASS))) {
                         return result;
                     }
                 }
