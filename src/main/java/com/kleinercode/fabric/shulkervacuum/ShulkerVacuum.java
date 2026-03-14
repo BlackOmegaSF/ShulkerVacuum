@@ -1,11 +1,11 @@
 package com.kleinercode.fabric.shulkervacuum;
 
 import net.fabricmc.api.DedicatedServerModInitializer;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ContainerComponent;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,17 +25,17 @@ public class ShulkerVacuum implements DedicatedServerModInitializer {
         PlayerPickUpItemCallback.EVENT.register((inventory, stack) -> {
             // Ignore all this logic for picking up shulker boxes
             if (Utils.checkIfShulkerBox(stack)) {
-                return ActionResult.PASS;
+                return InteractionResult.PASS;
             }
 
-            ItemStack offhand = inventory.player.getOffHandStack();
+            ItemStack offhand = inventory.player.getOffhandItem();
             if (!Utils.checkIfShulkerBox(offhand)) {
-                return ActionResult.PASS;
+                return InteractionResult.PASS;
             }
             // Player has shulker box in offhand, try to put the item in there
-            ContainerComponent container = offhand.get(DataComponentTypes.CONTAINER);
+            ItemContainerContents container = offhand.get(DataComponents.CONTAINER);
             List<ItemStack> tempSlots = new ArrayList<>(container.stream().toList());
-            DefaultedList<ItemStack> slots = DefaultedList.ofSize(27, ItemStack.EMPTY);
+            NonNullList<ItemStack> slots = NonNullList.withSize(27, ItemStack.EMPTY);
             for (int i = 0; i < tempSlots.size(); i++) {
                 slots.set(i, tempSlots.get(i));
             }
@@ -45,16 +45,16 @@ public class ShulkerVacuum implements DedicatedServerModInitializer {
                 if (availableSlot == -1) {
                     // There's no room in the box
                     if (updatedItemFlag) {
-                        offhand.set(DataComponentTypes.CONTAINER, ContainerComponent.fromStacks(slots));
-                        return ActionResult.SUCCESS;
+                        offhand.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(slots));
+                        return InteractionResult.SUCCESS;
                     } else {
-                        return ActionResult.PASS;
+                        return InteractionResult.PASS;
                     }
                 }
                 stack.setCount(Utils.addStack(availableSlot, stack, slots));
                 if (stack.isEmpty()) {
-                    offhand.set(DataComponentTypes.CONTAINER, ContainerComponent.fromStacks(slots));
-                    return ActionResult.CONSUME;
+                    offhand.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(slots));
+                    return InteractionResult.CONSUME;
                 }
                 updatedItemFlag = true;
             } while(true);

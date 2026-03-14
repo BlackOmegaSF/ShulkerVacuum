@@ -2,9 +2,9 @@ package com.kleinercode.fabric.shulkervacuum;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 
 public interface PlayerPickUpItemCallback {
 
@@ -21,16 +21,16 @@ public interface PlayerPickUpItemCallback {
     Event<PlayerPickUpItemCallback> EVENT = EventFactory.createArrayBacked(PlayerPickUpItemCallback.class,
             (listeners) -> (inventory, stack) -> {
                 for (PlayerPickUpItemCallback listener : listeners) {
-                    ActionResult result = listener.interact(inventory, stack);
+                    InteractionResult result = listener.interact(inventory, stack);
 
-                    if (!(result.equals(ActionResult.PASS))) {
+                    if (!(result.equals(InteractionResult.PASS))) {
                         return result;
                     }
                 }
 
-            return ActionResult.PASS;
+            return InteractionResult.PASS;
             });
 
-    ActionResult interact(PlayerInventory inventory, ItemStack stack);
+    InteractionResult interact(Inventory inventory, ItemStack stack);
 
 }
