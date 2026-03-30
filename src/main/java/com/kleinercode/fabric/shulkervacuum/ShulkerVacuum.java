@@ -9,9 +9,6 @@ import net.minecraft.world.item.component.ItemContainerContents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ShulkerVacuum implements DedicatedServerModInitializer {
 
     public static final String MOD_ID = "shulkervacuum";
@@ -34,11 +31,12 @@ public class ShulkerVacuum implements DedicatedServerModInitializer {
             }
             // Player has shulker box in offhand, try to put the item in there
             ItemContainerContents container = offhand.get(DataComponents.CONTAINER);
-            List<ItemStack> tempSlots = new ArrayList<>(container.stream().toList());
             NonNullList<ItemStack> slots = NonNullList.withSize(27, ItemStack.EMPTY);
-            for (int i = 0; i < tempSlots.size(); i++) {
-                slots.set(i, tempSlots.get(i));
+            if (container == null) {
+                // Unable to fetch shulker inventory, just pass event
+                return InteractionResult.PASS;
             }
+            container.copyInto(slots);
             boolean updatedItemFlag = false;
             do {
                 int availableSlot = Utils.getSlotWithRoomForStack(stack, slots);
